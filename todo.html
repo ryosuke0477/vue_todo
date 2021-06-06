@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <h1>TODOアプリ</h1>
+    <item-label v-bind:item-name="myItem1"></item-label>
+    <input type="text" name="task" v-model="params.task">
+    <item-label v-bind:item-name="myItem2"></item-label>
+    <input type="text" name="time" v-model="params.time">
+    <button @click="add">追加</button>
+    <table id="table">
+      <tr>
+        <th>タスク</th>
+        <th>推定時間（分）</th>
+        <th class="delitem">削除ボタン</th>
+      </tr>
+      <tr v-for="item in items" :key="item.id">
+        <td>{{item.task}}</td>
+        <td>{{item.time}}分</td>
+        <td class="delitem"><button @click="deleteitem(item)">削除</button></td>
+      </tr>
+    </table>
+  </div>
+  <script>
+      Vue.component('item-label', {
+        props: {
+          itemName: {
+            type: Object
+          }
+        },
+        template:`<label for="itemName.part">{{itemName.name}}：</label>`,
+      })
+
+    const vm = new Vue({
+      el: '#app',
+      data(){
+        return{
+          myItem1:
+            {
+             name:'タスク名',
+             part:"task",
+            },
+          myItem2:{
+             name: '推定時間（分）',
+             part: "time",
+            },
+          items:[],
+          params:
+          {
+            task: "",
+            time: "",
+          },
+        }},
+      methods:{
+        add(){
+          // var count = 1;
+          // count = count + 1;
+          if(this.params.task !=="" && this.params.time !== ""){
+            this.items.push({
+              id: this.params.length,
+              task:this.params.task,
+              time:this.params.time
+            });
+            this.params.task = '';
+            this.params.time = '';
+          }
+        },
+        deleteitem(item){
+          const index = this.items.indexOf(item);
+          this.items.splice(index,1);
+          for (let i = index; i < this.items.length; i++) {
+            this.items[i].id = i;
+          };
+        }
+      }
+    })
+  </script>
+  <style>
+    button{
+      display: block;
+      margin-top: 10px;
+      margin-left: 20px;
+    }
+    label{
+      margin-left: 20px;
+    }
+    table{
+      margin-top: 50px;
+      border-collapse: collapse;
+      border:1px solid #333;
+      margin-left: 20px;
+    }
+
+    th,td{
+        width:300px;
+         border-collapse: collapse;
+         border:1px solid #333;
+      }
+    th{
+      text-align: left;
+      background-color: beige;
+    }
+    .delitem{
+      width:100px;
+    }
+  </style>
+</body>
+
+</html>
